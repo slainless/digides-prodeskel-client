@@ -1,0 +1,7 @@
+preload = ["./scripts/preload.ts"]
+
+[install.scopes]
+"@jsr" = "https://npm.jsr.io"
+
+[test]
+preload = ["./scripts/preload.ts"]

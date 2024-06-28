@@ -1,0 +1,21 @@
+{
+  "name": "digides-prodeskel-ws",
+  "module": "dist/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@ryoppippi/unplugin-typia": "npm:@jsr/ryoppippi__unplugin-typia",
+    "@types/bun": "latest",
+    "ts-patch": "latest",
+    "typescript": "5.4.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "typia": "^6.3.1"
+  },
+  "scripts": {
+    "build": "./scripts/build.ts",
+    "prepare": "ts-patch install && typia patch"
+  }
+}
