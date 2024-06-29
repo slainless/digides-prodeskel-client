@@ -1,3 +1,5 @@
+import type { tags } from 'typia'
+
 export type CommandCode = 'identify_yourself' | 'start' | 'stop' | 'auth'
 
 export namespace CommandPacket {
@@ -6,9 +8,9 @@ export namespace CommandPacket {
   }
 
   export interface Auth extends Generic<'auth'> {
-    username: string
-    password: string
-    schema: string
+    username: string & tags.MinLength<3>
+    password: string & tags.MinLength<3>
+    schema: string & tags.MinLength<3>
   }
 }
 
