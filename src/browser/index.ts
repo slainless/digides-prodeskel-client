@@ -46,7 +46,7 @@ export class ProdeskelWebSocket extends WebSocket {
       this.#state = State.ERROR
       return e
     }).finally(() => {
-      this.emit($eventName('ready'))
+      this.emit(getEventName('ready'))
     })
 
     // event generator for event: `prodeskel:${string}`
@@ -55,11 +55,11 @@ export class ProdeskelWebSocket extends WebSocket {
         const data = JSON.parse(e.data)
         if (!is<ResponsePacket>(data)) return
 
-        this.emit($eventName('message'), data)
+        this.emit(getEventName('message'), data)
         let eventName = ''
         for (const eventNamePart of data.response.split(":")) {
           eventName += eventNamePart
-          this.emit($eventName(eventName as any), data)
+          this.emit(getEventName(eventName as any), data)
         }
       } catch (e) {
 
@@ -165,18 +165,41 @@ export class ProdeskelWebSocket extends WebSocket {
   onResponse<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): void
   onResponse(listener: (packet: ResponsePacket) => void): void
   onResponse(...args: any[]) {
+    const { code, listener } = ProdeskelWebSocket.#getListener(args)
+    this.on(code, listener)
+  }
+
+  /**
+   * Remove response handler. Internally, just an alias to `this.off(getEventName(code), listener)`.
+   */
+  offResponse<Code extends UnprefixedEventName>(code: Code, listener: (...args: any[]) => void): void {
+    this.off(getEventName(code), listener)
+  }
+
+  /**
+   * Event handler helper to create listener for prodeskel packets.
+   * Internally, will just attach listener to the `prodeskel:${string}` event.
+   */
+  onceResponse<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): void
+  onceResponse(listener: (packet: ResponsePacket) => void): void
+  onceResponse(...args: any[]) {
+    const { code, listener } = ProdeskelWebSocket.#getListener(args)
+    this.once(code, listener)
+  }
+
+  static #getListener(args: any[]) {
     if (typeof args[0] == 'string') {
       const code = assert<ResponseCode>(args[0])
       const listener = args[1]
       if (listener == null) throw new TypeError("Missing listener argument")
       if (typeof listener != 'function') throw new TypeError("Invalid listener argument")
 
-      this.addEventListener($eventName(code), listener)
+      return { code: getEventName(code), listener }
     } else if (typeof args[0] == 'function') {
       const listener = args[0]
       if (typeof listener != 'function') throw new TypeError("Invalid listener argument")
 
-      this.addEventListener($eventName('message'), listener)
+      return { code: getEventName('message'), listener }
     } else throw new TypeError("Invalid argument")
   }
 }
@@ -200,7 +223,7 @@ type PacketStartsWith<C extends UnprefixedEventName> =
   ResponsePacket :
   Extract<ResponsePacket, { response: Extract<ResponseCode, C | `${C}:${string}`> }>
 
-const $eventName = <T extends UnprefixedEventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
+export const getEventName = <T extends UnprefixedEventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
 
 export const ErrorInvalidServer = new TypeError("Server is not a valid DIGIDES Prodeskel server")
 export const ErrorConnectionClosed = new TypeError("Connection is closed")
