@@ -92,6 +92,10 @@ export class ProdeskelWebSocket extends WebSocket {
     if (this.#state === State.ERROR) throw ErrorConnectionClosed
   }
 
+  #assertServerLoggedIn() {
+    if (this.#state === State.CONNECTED || this.#state === State.INITIAL) throw ErrorNotAuthenticated
+  }
+
   /**
    * Helper method to wait until the connection is ready.
    * This method will also assert that the connection is valid.
@@ -132,19 +136,11 @@ export class ProdeskelWebSocket extends WebSocket {
     return new Promise<boolean>((res, rej) => {
       if (this.#state != State.CONNECTED) return res(true)
 
-      super.addEventListener('message', function listener(this, e) {
-        try {
-          const data = JSON.parse(e.data.toString())
-          if (!is<ResponsePacket.AuthOK | ResponsePacket.AuthInvalid>(data)) return
-
-          const isLoggedIn = data.response == 'auth:ok'
-          if (isLoggedIn) that.#state = State.IDLE
-          else that.#state = State.CONNECTED
-          res(isLoggedIn)
-          this.removeEventListener('message', listener)
-        } catch (e) {
-
-        }
+      this.onceResponse('auth', (packet) => {
+        const isLoggedIn = packet.response == 'auth:ok'
+        if (isLoggedIn) that.#state = State.IDLE
+        else that.#state = State.CONNECTED
+        res(isLoggedIn)
       })
 
       super.send(JSON.stringify(packet))
@@ -187,6 +183,75 @@ export class ProdeskelWebSocket extends WebSocket {
     this.once(code, listener)
   }
 
+  async start() {
+    await this.#assertServerReady()
+    this.#assertServerNotError()
+    this.#assertServerLoggedIn()
+
+    const that = this
+    return new Promise((res, rej) => {
+      if (this.#state === State.SYNCING) return res(true)
+
+      this.onResponse('sync_status', function listener(packet) {
+        switch (packet.response) {
+          case 'sync_status:already_running':
+          case 'sync_status:started':
+            break
+          default:
+            return
+        }
+
+        that.offResponse('sync_status', listener)
+        that.#state = State.SYNCING
+        res(true)
+      })
+
+      const onStop = () => {
+        this.#state = State.IDLE
+      }
+      this.onceResponse('sync_status:finished', onStop)
+      this.onceResponse('sync_status:stopped', onStop)
+
+      this.send(JSON.stringify({
+        command: 'start'
+      } satisfies CommandPacket.Generic<'start'>))
+
+      setTimeout(() => rej(ErrorTimeout), this.connectionTimeout)
+    })
+  }
+
+  async stop() {
+    await this.#assertServerReady()
+    this.#assertServerNotError()
+    this.#assertServerLoggedIn()
+
+    const that = this
+    return new Promise((res, rej) => {
+      if (this.#state === State.IDLE) return res(true)
+
+      this.onResponse('sync_status', function listener(packet) {
+        switch (packet.response) {
+          case 'sync_status:no_running_task':
+          case 'sync_status:finished':
+          case 'sync_status:stopped':
+            break
+          default:
+            return
+        }
+
+        that.offResponse('sync_status', listener)
+        that.#state = State.IDLE
+        res(true)
+      })
+
+      this.send(JSON.stringify({
+        command: 'stop'
+      } satisfies CommandPacket.Generic<'stop'>))
+
+      setTimeout(() => rej(ErrorTimeout), this.connectionTimeout)
+    })
+  }
+
   static #getListener(args: any[]) {
     if (typeof args[0] == 'string') {
       const code = assert<ResponseCode>(args[0])
@@ -227,4 +292,5 @@ export const getEventName = <T extends UnprefixedEventName>(name: T): `${typeof 
 
 export const ErrorInvalidServer = new TypeError("Server is not a valid DIGIDES Prodeskel server")
 export const ErrorConnectionClosed = new TypeError("Connection is closed")
+export const ErrorNotAuthenticated = new TypeError("Server not authenticated yet")
 export const ErrorTimeout = new TypeError("Connection timed out")
