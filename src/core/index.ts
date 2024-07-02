@@ -253,7 +253,7 @@ export abstract class ProdeskelWebSocket {
     })
   }
 
-  protected static getListener(args: any[]) {
+  private static getListener(args: any[]) {
     if (typeof args[0] == 'string') {
       const code = assert<ResponseCode>(args[0])
       const listener = args[1]
@@ -282,7 +282,7 @@ export enum State {
   ERROR
 }
 
-export const EventNamePrefix = 'prodeskel'
+export const EventNamePrefix: string = 'prodeskel'
 type UnprefixedEventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message'
 export type EventName = `${typeof EventNamePrefix}:${UnprefixedEventName}`
 
@@ -295,9 +295,9 @@ type PacketStartsWith<C extends UnprefixedEventName> =
 
 export const getEventName = <T extends UnprefixedEventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
 
-export const ErrorInvalidServer = new TypeError("Server is not a valid DIGIDES Prodeskel server")
-export const ErrorConnectionClosed = new TypeError("Connection is closed")
-export const ErrorNotAuthenticated = new TypeError("Server not authenticated yet")
-export const ErrorTimeout = new TypeError("Connection timed out")
+export const ErrorInvalidServer: Error = new TypeError("Server is not a valid DIGIDES Prodeskel server")
+export const ErrorConnectionClosed: Error = new TypeError("Connection is closed")
+export const ErrorNotAuthenticated: Error = new TypeError("Server not authenticated yet")
+export const ErrorTimeout: Error = new TypeError("Connection timed out")
 
 export type { CommandPacket, ResponseCode, ResponsePacket, WebSocketLike, WebsocketData }
