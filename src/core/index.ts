@@ -37,6 +37,7 @@ export abstract class ProdeskelWebSocket {
           that.__isServerValid = true
           res(true)
           that.ws.off('message', listener)
+          that.ws.emit(getEventName('ready'))
         })
 
         // send the command
@@ -48,8 +49,6 @@ export abstract class ProdeskelWebSocket {
       this.__isServerValid = false
       this.__state = State.ERROR
       return e
-    }).finally(() => {
-      this.ws.emit(getEventName('ready'))
     })
 
     // event generator for event: `prodeskel:${string}`
@@ -270,6 +269,10 @@ export abstract class ProdeskelWebSocket {
 
       return { code: getEventName('message'), listener }
     } else throw new TypeError("Invalid argument")
+  }
+
+  get connection() {
+    return this.ws
   }
 }
 

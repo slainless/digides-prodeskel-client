@@ -18,8 +18,6 @@ export type ResponseCode =
   | 'sync_task:sync:error'
   | 'sync_task:sync:done'
   | 'sync_task:delete:started'
-  | 'sync_task:delete:assigned_op'
-  | 'sync_task:delete:conflict'
   | 'sync_task:delete:error'
   | 'sync_task:delete:done'
 
@@ -37,6 +35,11 @@ export namespace SyncTaskProgress {
     current_nik: string
   }
 
+  export interface WithProdeskelKK {
+    kode_keluarga: string
+    current_prodeskel_ak_id: string
+  }
+
   export interface WithProdeskel {
     current_prodeskel_kk_id: string
     current_prodeskel_ak_id: string
@@ -50,7 +53,6 @@ export namespace ResponsePacket {
 
   export interface Error extends Generic<'error'> {
     error: string
-    code: string
     [key: string]: any
   }
 
@@ -61,7 +63,9 @@ export namespace ResponsePacket {
 
   // auth
 
-  export interface AuthInvalid extends Generic<'auth:invalid'> { }
+  export interface AuthInvalid extends Generic<'auth:invalid'> {
+    error: string
+  }
   export interface AuthOKAlreadyRunning extends Generic<'auth:ok'>, SyncTaskProgress.Base {
     sync_status: 'already_running'
   }
@@ -79,6 +83,7 @@ export namespace ResponsePacket {
   type BaseProgress = SyncTaskProgress.Base
   type NamedProgress = BaseProgress & SyncTaskProgress.WithName
   type FullProgress = NamedProgress & SyncTaskProgress.WithProdeskel
+  type BaseProgressWithKK = BaseProgress & SyncTaskProgress.WithProdeskelKK
 
   export interface SyncTaskSyncStarted extends Generic<'sync_task:sync:started'>, NamedProgress { }
   export interface SyncTaskSyncAssignedOp extends Generic<'sync_task:sync:assigned_op'>, NamedProgress {
@@ -86,13 +91,14 @@ export namespace ResponsePacket {
   }
   export interface SyncTaskSyncConflict extends Generic<'sync_task:sync:conflict'>, FullProgress { }
   export interface SyncTaskSyncDone extends Generic<'sync_task:sync:done'>, FullProgress { }
-  export interface SyncTaskSyncError extends Generic<'sync_task:sync:error'>, BaseProgress { }
+  export interface SyncTaskSyncError extends Generic<'sync_task:sync:error'>, BaseProgress {
+    error: string
+    [key: string]: any
+  }
 
   type No<T extends { response: string }> = Omit<T, 'response'>
-  export interface SyncTaskDeleteStarted extends No<SyncTaskSyncStarted>, Generic<'sync_task:delete:started'> { }
-  export interface SyncTaskDeleteAssignedOp extends No<SyncTaskSyncAssignedOp>, Generic<'sync_task:delete:assigned_op'> { }
-  export interface SyncTaskDeleteConflict extends No<SyncTaskSyncConflict>, Generic<'sync_task:delete:conflict'> { }
-  export interface SyncTaskDeleteDone extends No<SyncTaskDeleteError>, Generic<'sync_task:delete:done'> { }
+  export interface SyncTaskDeleteStarted extends Generic<'sync_task:delete:started'>, BaseProgressWithKK { }
+  export interface SyncTaskDeleteDone extends Generic<'sync_task:delete:done'>, BaseProgressWithKK { }
   export interface SyncTaskDeleteError extends No<SyncTaskSyncError>, Generic<'sync_task:delete:error'> { }
 }
 
@@ -108,7 +114,5 @@ export type ResponsePacket =
   | ResponsePacket.SyncTaskSyncDone
   | ResponsePacket.SyncTaskSyncError
   | ResponsePacket.SyncTaskDeleteStarted
-  | ResponsePacket.SyncTaskDeleteAssignedOp
-  | ResponsePacket.SyncTaskDeleteConflict
   | ResponsePacket.SyncTaskDeleteDone
   | ResponsePacket.SyncTaskDeleteError
