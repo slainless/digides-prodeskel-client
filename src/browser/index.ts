@@ -1,7 +1,7 @@
-import { ProdeskelWebSocket as Core, getEventName } from '../core';
+import { ProdeskelWebSocket as Core, getEventName } from '../core'
 import { EventEmitterWebSocket } from './websocket'
 
-export { getEventName }
+export { getEventName, EventEmitterWebSocket }
 
 export class ProdeskelWebSocket extends Core {
   protected ws: EventEmitterWebSocket

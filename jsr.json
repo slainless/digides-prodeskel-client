@@ -1,0 +1,11 @@
+{
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
+  "name": "prodeskel-ws",
+  "version": "0.1.0",
+  "description": "Basic WebSocket client implementations for DIGIDES Prodeskel Service.",
+  "exports": {
+    "./browser": "./src/browser/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./core": "./src/core/index.ts"
+  }
+}

@@ -1,20 +1,19 @@
 import { assert, is } from 'typia'
-import type { ResponseCode, ResponsePacket } from '../schema/response'
-import type { CommandPacket } from '../schema/command'
+import type { ResponseCode, ResponsePacket, CommandPacket } from '../schema'
 import type { WebSocketLike, WebsocketData } from './websocket'
 
 export abstract class ProdeskelWebSocket {
   protected __isServerValid: boolean | null = null
   protected isServerReady: Promise<Error | true> | null = null
-  protected __state = State.INITIAL
+  protected __state: State = State.INITIAL
 
   protected __version: string | null = null
   protected __name: string | null = null
 
   protected abstract ws: WebSocketLike
-  protected connectionTimeout = 10000
+  protected connectionTimeout: number = 10000
 
-  protected init() {
+  protected init(): void {
     const that = this
 
     this.isServerReady = new Promise<Error | true>((res, rej) => {
@@ -69,33 +68,33 @@ export abstract class ProdeskelWebSocket {
     })
   }
 
-  get state() {
+  get state(): State {
     return this.__state
   }
 
-  get name() {
+  get name(): string | null {
     return this.__name
   }
 
-  get version() {
+  get version(): string | null {
     return this.__version
   }
 
-  get isServerValid() {
+  get isServerValid(): boolean | null {
     return this.__isServerValid
   }
 
-  protected async assertServerReady() {
+  protected async assertServerReady(): Promise<void> {
     if (this.isServerReady == null) throw new TypeError("Implementation error: not initialized yet")
     const status = await this.isServerReady
     if (status instanceof Error) throw status
   }
 
-  protected assertServerNotError() {
+  protected assertServerNotError(): void {
     if (this.__state === State.ERROR) throw ErrorConnectionClosed
   }
 
-  protected assertServerLoggedIn() {
+  protected assertServerLoggedIn(): void {
     if (this.__state === State.CONNECTED || this.__state === State.INITIAL) throw ErrorNotAuthenticated
   }
 
@@ -103,7 +102,7 @@ export abstract class ProdeskelWebSocket {
    * Helper method to wait until the connection is ready.
    * This method will also assert that the connection is valid.
    */
-  async ready() {
+  async ready(): Promise<void> {
     await this.assertServerReady()
     return
   }
@@ -124,7 +123,7 @@ export abstract class ProdeskelWebSocket {
    * authentication internally after the first successful login and
    * will simply respond with `ResponsePacket.AuthOK`.
    */
-  async login(username: string, password: string, schema: string) {
+  async login(username: string, password: string, schema: string): Promise<boolean> {
     const packet = assert<CommandPacket.Auth>({
       command: 'auth',
       username,
@@ -149,10 +148,10 @@ export abstract class ProdeskelWebSocket {
 
       setTimeout(() => rej(ErrorTimeout), this.connectionTimeout)
     }).catch((e: Error) => {
-      if (e === ErrorTimeout) return e
+      if (e === ErrorTimeout) throw e
       this.__state = State.ERROR
       this.ws.close()
-      return e
+      throw e
     })
   }
 
@@ -162,7 +161,7 @@ export abstract class ProdeskelWebSocket {
    */
   on<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): void
   on(listener: (packet: ResponsePacket) => void): void
-  on(...args: any[]) {
+  on(...args: any[]): void {
     const { code, listener } = ProdeskelWebSocket.getListener(args)
     this.ws.on(code, listener)
   }
@@ -180,18 +179,18 @@ export abstract class ProdeskelWebSocket {
    */
   once<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): void
   once(listener: (packet: ResponsePacket) => void): void
-  once(...args: any[]) {
+  once(...args: any[]): void {
     const { code, listener } = ProdeskelWebSocket.getListener(args)
     this.ws.once(code, listener)
   }
 
-  async start() {
+  async start(): Promise<boolean> {
     await this.assertServerReady()
     this.assertServerNotError()
     this.assertServerLoggedIn()
 
     const that = this
-    return new Promise((res, rej) => {
+    return new Promise<boolean>((res, rej) => {
       if (this.__state === State.SYNCING) return res(true)
 
       this.on('sync_status', function listener(packet) {
@@ -222,7 +221,7 @@ export abstract class ProdeskelWebSocket {
     })
   }
 
-  async stop() {
+  async stop(): Promise<boolean> {
     await this.assertServerReady()
     this.assertServerNotError()
     this.assertServerLoggedIn()
@@ -270,7 +269,7 @@ export abstract class ProdeskelWebSocket {
     } else throw new TypeError("Invalid argument")
   }
 
-  get connection() {
+  get connection(): typeof this.ws {
     return this.ws
   }
 }
