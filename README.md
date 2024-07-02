@@ -5,6 +5,10 @@ Basic WebSocket client implementations for DIGIDES Prodeskel Service.
 This package should provide browser-compliant client (extending browser's WebSocket)
 and to-be-added later, advanced client for server-side usage.
 
+This package is ESM-only.
+
+IIFE package should be provided soon.
+
 ## Features
 
 This package is basically just an extension to base `WebSocket` class, with
