@@ -2,6 +2,7 @@ import { ProdeskelWebSocket as Core, getEventName } from '../core'
 import { EventEmitterWebSocket } from './websocket'
 
 export { getEventName, EventEmitterWebSocket }
+export { State } from '../core'
 
 export class ProdeskelWebSocket extends Core {
   protected ws: EventEmitterWebSocket
