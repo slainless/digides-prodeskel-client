@@ -1,7 +1,12 @@
 {
-  "name": "digides-prodeskel-ws",
+  "name": "prodeskel-ws",
   "type": "module",
+  "author": "Aiman Fauzy",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slainless/prodeskel-ws.git"
+  },
   "devDependencies": {
     "@ryoppippi/unplugin-typia": "npm:@jsr/ryoppippi__unplugin-typia",
     "@types/bun": "^1.1.6",
@@ -19,10 +24,10 @@
   },
   "exports": {
     "./browser": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/browser/index.cjs",
+      "import": "./dist/browser/index.mjs",
+      "default": "./dist/browser/index.js",
+      "types": "./dist/browser/index.d.ts"
     },
     "./schema": {
       "require": "./dist/schema/index.js",
@@ -34,5 +39,6 @@
       "import": "./dist/core/index.mjs",
       "types": "./dist/core/index.d.ts"
     }
-  }
+  },
+  "license": "MIT"
 }

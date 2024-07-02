@@ -1,4 +1,4 @@
-# digides-prodeskel-ws
+# prodeskel-ws
 
 Basic WebSocket client implementations for DIGIDES Prodeskel Service.
 
@@ -25,14 +25,14 @@ some added methods to allow easier integration:
 ## Usage
 
 For now, this package provides implementation for browser usage,
-which can be imported from `digides-prodeskel-ws/browser`.
+which can be imported from `prodeskel-ws/browser`.
 
 Usage examples:
 
 ### Client generation
 
 ```ts
-import { ProdeskelWebSocket } from 'digides-prodeskel-ws'
+import { ProdeskelWebSocket } from 'prodeskel-ws'
 
 async function createClient() {
   const ws = new ProdeskelWebSocket('wss://service.id/ws')
@@ -44,7 +44,7 @@ async function createClient() {
 ### Full usage
 
 ```ts
-import { ProdeskelWebSocket } from 'digides-prodeskel-ws'
+import { ProdeskelWebSocket } from 'prodeskel-ws'
 
 ...
 
@@ -88,7 +88,7 @@ Also, correct event code can be acquired from `getEventName`, exported by `./cor
 module.
 
 ```ts
-import { getEventName, ProdeskelWebSocket } from 'digides-prodeskel-ws'
+import { getEventName, ProdeskelWebSocket } from 'prodeskel-ws'
 
 async function createClient(credential) {
   const ws = new ProdeskelWebSocket('wss://service.id/ws')
