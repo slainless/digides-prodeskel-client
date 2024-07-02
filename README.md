@@ -3,7 +3,7 @@
 Basic WebSocket client implementations for DIGIDES Prodeskel Service.
 
 This package should provide browser-compliant client (extending browser's WebSocket)
-and more advanced client for server-side usage (implementation to be extended: to be determined).
+and to-be-added later, advanced client for server-side usage.
 
 ## Features
 
@@ -16,8 +16,7 @@ some added methods to allow easier integration:
   process, using `ws.on(getEventName('ready'), () => {})`.
 - `login()`: Provides easy in-connection authentication.
   This method will call `ready()` internally so it's safe to be called directly without invoking `ready()`.
-- `onResponse()`, `onceResponse()`, `offResponse()`: Provides quick shortcut to `WebSocket.on|once|off`
-  and fully typed for DIGIDES prodeskel communication.
+- `on()`, `once()`, `off()`: Provides event listener handling shortcut for the underneath websocket.
 - `start()`: Start synchronization process. Will return true without network call if already synchronizing
   or when server responds with `sync_status:already_running|started`.
 - `stop()`: Stop synchronization process. Will return false without network call if idle
@@ -25,9 +24,8 @@ some added methods to allow easier integration:
 
 ## Usage
 
-The package should provide `WebSocket` implementation based on the environment being used.
-It should export DOM's WebSocket when targeting browser, but should export
-a more powerful WebSocket implementation when targeting server-side usage.
+For now, this package provides implementation for browser usage,
+which can be imported from `digides-prodeskel-ws/browser`.
 
 Usage examples:
 
@@ -54,11 +52,11 @@ async function createClient(server, credential) {
   const ws = new ProdeskelWebSocket(server)
   await ws.login(credential.username, credential.password, credential.schema)
 
-  ws.onResponse('sync_task', (packet) => {
+  ws.on('sync_task', (packet) => {
     updateProgress(packet)
   })
 
-  ws.onResponse('sync_status', (packet) => {
+  ws.on('sync_status', (packet) => {
     updateStatus(packet)
   })
 
@@ -80,11 +78,14 @@ return <div>
 </div>
 ```
 
-## Manual event handling
+## Underlying connection
 
-Event handling can also be done manually. Correct event code can be acquired from `getEventName`.
-It should be noted however, that the native method is not fully typed for DIGIDES prodeskel communication
-as compared to provided helper methods.
+Underlying connection is intentionally exposed, to allow manual control over it in case more advanced
+usage is needed, for example, manual event handling. The connection should be accessible from
+`ProdeskelWebSocket.connection`.
+
+Also, correct event code can be acquired from `getEventName`, exported by `./core` or by each platform specific
+module.
 
 ```ts
 import { getEventName, ProdeskelWebSocket } from 'digides-prodeskel-ws'
@@ -93,7 +94,8 @@ async function createClient(credential) {
   const ws = new ProdeskelWebSocket('wss://service.id/ws')
   await ws.login(credential.username, credential.password, credential.schema)
 
-  ws.on(getEventName('message'), (packet) => {
+  // Connection at the very least should be returning WebSocketLike.
+  ws.connection.on(getEventName('message'), (packet) => {
     console.log(packet)
   })
 }
@@ -101,4 +103,5 @@ async function createClient(credential) {
 
 ## Development
 
-Developed in Bun environment and using `typia` for data validation.
+- Developed in Bun environment
+- Data validation with `typia`.
