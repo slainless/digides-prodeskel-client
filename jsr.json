@@ -1,6 +1,6 @@
 {
   "$schema": "https://jsr.io/schema/config-file.v1.json",
-  "name": "prodeskel-ws",
+  "name": "@slainless/prodeskel-ws",
   "version": "0.1.0",
   "description": "Basic WebSocket client implementations for DIGIDES Prodeskel Service.",
   "exports": {
