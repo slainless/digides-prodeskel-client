@@ -3,3 +3,4 @@
 scripts
 src
 **/tsconfig.json
+test

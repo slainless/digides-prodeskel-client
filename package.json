@@ -19,7 +19,7 @@
     "typia": "^6.3.1"
   },
   "scripts": {
-    "build:browser": "tsc -p ./src/browser/tsconfig.json && bun ./scripts/build.browser.ts",
+    "build:browser": "rm -rf dist && tsc -p ./src/browser/tsconfig.json && bun ./scripts/build.browser.ts",
     "prepare": "ts-patch install && typia patch"
   },
   "exports": {
