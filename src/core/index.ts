@@ -142,7 +142,6 @@ export abstract class ProdeskelWebSocket {
       this.once('auth', (packet) => {
         const isLoggedIn = packet.response == 'auth:ok'
         if (isLoggedIn) that.__state = State.IDLE
-        else that.__state = State.CONNECTED
         res(isLoggedIn)
       })
 
