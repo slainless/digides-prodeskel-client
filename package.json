@@ -1,21 +1,40 @@
 {
   "name": "digides-prodeskel-ws",
-  "module": "dist/index.ts",
   "type": "module",
+  "version": "0.1.0",
   "devDependencies": {
     "@ryoppippi/unplugin-typia": "npm:@jsr/ryoppippi__unplugin-typia",
-    "@types/bun": "latest",
+    "@types/bun": "^1.1.6",
+    "@types/node": "^20.14.9",
+    "esbuild": "^0.22.0",
     "ts-patch": "latest",
     "typescript": "5.4.2"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
+    "typescript": "^5.0.0",
     "typia": "^6.3.1"
   },
+  "dependencies": {},
   "scripts": {
-    "build": "./scripts/build.ts",
+    "build:browser": "tsc -p ./src/browser/tsconfig.json && bun ./scripts/build.browser.ts",
     "prepare": "ts-patch install && typia patch"
+  },
+  "exports": {
+    "./browser": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schema": {
+      "require": "./dist/schema/index.js",
+      "import": "./dist/schema/index.mjs",
+      "types": "./dist/schema/index.d.ts"
+    },
+    "./core": {
+      "require": "./dist/core/index.cjs",
+      "import": "./dist/core/index.mjs",
+      "types": "./dist/core/index.d.ts"
+    }
   }
 }
