@@ -19,6 +19,15 @@ export const core = {
   platform: "neutral",
 } satisfies BuildOptions
 
+export const schema = {
+  entryPoints: ["./src/schema/**/*.ts"],
+  outdir: "./dist/schema",
+  plugins: [typia()],
+  target: 'es2020',
+  logLevel: "info",
+  platform: "neutral",
+} satisfies BuildOptions
+
 export const esm = {
   format: "esm",
   outExtension: {

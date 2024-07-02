@@ -1,13 +1,15 @@
 #!/usr/bin/env -S bun run
 
 import { build } from 'esbuild'
-import { browser, cjs, core, esm } from './build.config'
+import { browser, cjs, core, esm, schema } from './build.config'
 
 await Promise.all([
 	build({ ...browser, ...esm }),
 	build({ ...browser, ...cjs }),
 	build({ ...core, ...esm }),
 	build({ ...core, ...cjs }),
+	build({ ...schema, ...esm }),
+	build({ ...schema, ...cjs }),
 	build({
 		...browser,
 		entryPoints: ["./src/browser/index.ts"],
