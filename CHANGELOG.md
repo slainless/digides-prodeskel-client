@@ -1,13 +1,6 @@
 # Changelog
 
 ---
-## [unreleased]
-
-### Build
-
-- removed git-cliff, depended on bunx instead - ([8d72f08](https://github.com/slainless/prodeskel-ws/commit/8d72f08d81b2ecedb0a88747dc84cd461347ada4)) - Aiman Fauzy
-
----
 ## [0.1.10](https://github.com/slainless/prodeskel-ws/compare/v0.1.9..v0.1.10) - 2024-07-03
 
 ### Bug Fixes
