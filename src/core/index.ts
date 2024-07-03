@@ -13,7 +13,7 @@ export abstract class ProdeskelWebSocket {
   protected abstract ws: WebSocketLike
   protected connectionTimeout: number = 10000
 
-  protected init(): void {
+  protected init(): this {
     const that = this
 
     this.isServerReady = new Promise<Error | true>((res, rej) => {
@@ -66,6 +66,8 @@ export abstract class ProdeskelWebSocket {
 
       }
     })
+
+    return this
   }
 
   get state(): State {
@@ -90,12 +92,14 @@ export abstract class ProdeskelWebSocket {
     if (status instanceof Error) throw status
   }
 
-  protected assertServerNotError(): void {
+  protected assertServerNotError(): this {
     if (this.__state === State.ERROR) throw ErrorConnectionClosed
+    return this
   }
 
-  protected assertServerLoggedIn(): void {
+  protected assertServerLoggedIn(): this {
     if (this.__state === State.CONNECTED || this.__state === State.INITIAL) throw ErrorNotAuthenticated
+    return this
   }
 
   /**
@@ -159,29 +163,32 @@ export abstract class ProdeskelWebSocket {
    * Event handler helper to create listener for prodeskel packets.
    * Internally, will just attach listener to the `prodeskel:${string}` event.
    */
-  on<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): void
-  on(listener: (packet: ResponsePacket) => void): void
-  on(...args: any[]): void {
+  on<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): this
+  on(listener: (packet: ResponsePacket) => void): this
+  on(...args: any[]): this {
     const { code, listener } = ProdeskelWebSocket.getListener(args)
     this.ws.on(code, listener)
+    return this
   }
 
   /**
    * Remove response handler. Internally, just an alias to `this.off(getEventName(code), listener)`.
    */
-  off<Code extends UnprefixedEventName>(code: Code, listener: (...args: any[]) => void): void {
+  off<Code extends UnprefixedEventName>(code: Code, listener: (...args: any[]) => void): this {
     this.ws.off(getEventName(code), listener)
+    return this
   }
 
   /**
    * Event handler helper to create listener for prodeskel packets.
    * Internally, will just attach listener to the `prodeskel:${string}` event.
    */
-  once<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): void
-  once(listener: (packet: ResponsePacket) => void): void
-  once(...args: any[]): void {
+  once<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): this
+  once(listener: (packet: ResponsePacket) => void): this
+  once(...args: any[]): this {
     const { code, listener } = ProdeskelWebSocket.getListener(args)
     this.ws.once(code, listener)
+    return this
   }
 
   async start(): Promise<boolean> {
@@ -253,7 +260,7 @@ export abstract class ProdeskelWebSocket {
     })
   }
 
-  private static getListener(args: any[]) {
+  private static getListener(args: any[]): { code: EventName, listener: (...args: any[]) => void } {
     if (typeof args[0] == 'string') {
       const code = assert<ResponseCode>(args[0])
       const listener = args[1]
@@ -283,7 +290,7 @@ export enum State {
 }
 
 export const EventNamePrefix: string = 'prodeskel'
-type UnprefixedEventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message'
+type UnprefixedEventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message' | 'state_change'
 export type EventName = `${typeof EventNamePrefix}:${UnprefixedEventName}`
 
 type Explode<T extends string, Acc extends string = ''> =
@@ -291,6 +298,8 @@ type Explode<T extends string, Acc extends string = ''> =
 type PacketStartsWith<C extends UnprefixedEventName> =
   C extends 'message' ?
   ResponsePacket :
+  C extends 'state_change' ?
+  State :
   Extract<ResponsePacket, { response: Extract<ResponseCode, C | `${C}:${string}`> }>
 
 export const getEventName = <T extends UnprefixedEventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
