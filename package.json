@@ -20,7 +20,7 @@
     "typia": "^6.3.1"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc --build",
     "prepare": "ts-patch install && typia patch"
   },
   "exports": {
