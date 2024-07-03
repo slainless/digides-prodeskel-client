@@ -1,6 +1,19 @@
 # Changelog
 
 ---
+## [0.1.11](https://github.com/slainless/prodeskel-ws/compare/v0.1.10..0.1.11) - 2024-07-03
+
+### Documentation
+
+- added CHANGELOG - ([87a63a6](https://github.com/slainless/prodeskel-ws/commit/87a63a6219250fe008e2b1a4c92a8edd3736cb21)) - Aiman Fauzy
+- trim changelog - ([17245cf](https://github.com/slainless/prodeskel-ws/commit/17245cf4af0c42201650988b36c5a9e9fac9a8a7)) - Aiman Fauzy
+
+### Build
+
+- added publish script - ([3de1957](https://github.com/slainless/prodeskel-ws/commit/3de1957fbf8440a2794780d4ecbee9323de88e8d)) - Aiman Fauzy
+- fix publish script - ([1e952bb](https://github.com/slainless/prodeskel-ws/commit/1e952bbc2d1d8839303925dcf79dac55f6ce5d6a)) - Aiman Fauzy
+
+---
 ## [0.1.10](https://github.com/slainless/prodeskel-ws/compare/v0.1.9..v0.1.10) - 2024-07-03
 
 ### Bug Fixes
