@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# check argument
 case $1 in
     "patch" | "minor" | "major" | "")
         version=$(git describe --abbrev=0 --tags)
@@ -30,17 +29,16 @@ case $1 in
         echo "Invalid argument. Possible values are: patch | minor | major | \"v*\""
         exit 1
 esac
+echo "~ Release preparation for version $version"
 
-# bump version
+echo "~ Bumping package.json and jsr.json"
 bunx node-jq --arg version "$version" '.version = $version' package.json > package.json.tmp && mv package.json.tmp package.json
 bunx node-jq --arg version "$version" '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
 
-# prepend CHANGELOG
+echo "~ Prepending CHANGELOG.md"
 bunx git-cliff --unreleased --tag $version --prepend CHANGELOG.md
 
-# stage jsr.json and package.json
-git add jsr.json package.json
-
-# commit then tag
+echo "~ Committing changes"
+git add jsr.json package.json CHANGELOG.md
 git commit -m "chore(version): $version"
 git tag -a "v$version" -m "$(bunx git-cliff --unreleased --tag $version)"
