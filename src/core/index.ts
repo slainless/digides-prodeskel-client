@@ -32,7 +32,7 @@ export abstract class ProdeskelWebSocket {
 
           that.__name = data.name
           that.__version = data.version
-          that.__state = State.CONNECTED
+          that.setState(State.CONNECTED)
           that.__isServerValid = true
           res(true)
           that.ws.off('message', listener)
@@ -46,7 +46,7 @@ export abstract class ProdeskelWebSocket {
       setTimeout(() => rej(ErrorTimeout), this.connectionTimeout)
     }).catch(e => {
       this.__isServerValid = false
-      this.__state = State.ERROR
+      this.setState(State.ERROR)
       return e
     })
 
@@ -72,6 +72,13 @@ export abstract class ProdeskelWebSocket {
 
   get state(): State {
     return this.__state
+  }
+
+  protected setState(state: State): this {
+    if (this.__state !== state)
+      this.ws.emit(getEventName("state_change"), state)
+    this.__state = state
+    return this
   }
 
   get name(): string | null {
@@ -144,7 +151,7 @@ export abstract class ProdeskelWebSocket {
 
       this.once('auth', (packet) => {
         const isLoggedIn = packet.response == 'auth:ok'
-        if (isLoggedIn) that.__state = State.IDLE
+        if (isLoggedIn) that.setState(State.IDLE)
         res(isLoggedIn)
       })
 
@@ -153,7 +160,7 @@ export abstract class ProdeskelWebSocket {
       setTimeout(() => rej(ErrorTimeout), this.connectionTimeout)
     }).catch((e: Error) => {
       if (e === ErrorTimeout) throw e
-      this.__state = State.ERROR
+      this.setState(State.ERROR)
       this.ws.close()
       throw e
     })
@@ -210,12 +217,12 @@ export abstract class ProdeskelWebSocket {
         }
 
         that.off('sync_status', listener)
-        that.__state = State.SYNCING
+        that.setState(State.SYNCING)
         res(true)
       })
 
       const onStop = () => {
-        this.__state = State.IDLE
+        this.setState(State.IDLE)
       }
       this.once('sync_status:finished', onStop)
       this.once('sync_status:stopped', onStop)
@@ -248,7 +255,7 @@ export abstract class ProdeskelWebSocket {
         }
 
         that.off('sync_status', listener)
-        that.__state = State.IDLE
+        that.setState(State.IDLE)
         res(true)
       })
 
