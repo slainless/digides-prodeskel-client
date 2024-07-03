@@ -40,7 +40,9 @@ export abstract class ProdeskelWebSocket {
         })
 
         // send the command
-        this.ws.send(JSON.stringify({ type: 'command', command: "identify:yourself" }))
+        this.ws.send(JSON.stringify({
+          command: "identify_yourself"
+        } satisfies CommandPacket.Generic<'identify_yourself'>))
       })
 
       setTimeout(() => rej(ErrorTimeout), this.connectionTimeout)
