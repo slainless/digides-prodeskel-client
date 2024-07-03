@@ -269,7 +269,7 @@ export abstract class ProdeskelWebSocket {
 
   private static getListener(args: any[]): { code: EventName, listener: (...args: any[]) => void } {
     if (typeof args[0] == 'string') {
-      const code = assert<ResponseCode>(args[0])
+      const code = assert<UnprefixedEventName>(args[0])
       const listener = args[1]
       if (listener == null) throw new TypeError("Missing listener argument")
       if (typeof listener != 'function') throw new TypeError("Invalid listener argument")
