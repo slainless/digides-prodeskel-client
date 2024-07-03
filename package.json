@@ -26,17 +26,14 @@
   "exports": {
     "./browser": {
       "import": "./dist/browser/index.js",
-      "default": "./dist/browser/index.js",
       "types": "./dist/browser/index.d.ts"
     },
     "./schema": {
       "import": "./dist/schema/index.js",
-      "default": "./dist/schema/index.js",
       "types": "./dist/schema/index.d.ts"
     },
     "./core": {
       "import": "./dist/core/index.js",
-      "default": "./dist/core/index.js",
       "types": "./dist/core/index.d.ts"
     }
   },

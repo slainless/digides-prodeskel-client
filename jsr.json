@@ -4,9 +4,9 @@
   "version": "0.1.7",
   "description": "Basic WebSocket client implementations for DIGIDES Prodeskel Service.",
   "exports": {
-    "./browser": "./dist/browser/index.d.ts",
-    "./schema": "./dist/schema/index.d.ts",
-    "./core": "./dist/core/index.d.ts"
+    "./browser": "./dist/browser/index.js",
+    "./schema": "./dist/schema/index.js",
+    "./core": "./dist/core/index.js"
   },
   "publish": {
     "include": [
