@@ -13,6 +13,7 @@
     "@types/bun": "^1.1.6",
     "@types/node": "^20.14.9",
     "esbuild": "^0.22.0",
+    "git-cliff": "^2.4.0",
     "ts-patch": "latest",
     "typescript": "5.4.2"
   },
