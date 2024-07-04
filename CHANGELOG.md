@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.13](https://github.com/slainless/prodeskel-ws/compare/v0.1.12..0.1.13) - 2024-07-04
+
+### Build
+
+- added post_build script to prepend reference directive to generated js - ([e09438b](https://github.com/slainless/prodeskel-ws/commit/e09438be9ee79965b9d07e8d87b03827138749a7)) - Aiman Fauzy
+
+---
 ## [0.1.12](https://github.com/slainless/prodeskel-ws/compare/v0.1.11..0.1.12) - 2024-07-04
 
 ### Bug Fixes
