@@ -1,6 +1,14 @@
 # Changelog
 
 ---
+## [0.1.12](https://github.com/slainless/prodeskel-ws/compare/v0.1.11..0.1.12) - 2024-07-04
+
+### Bug Fixes
+
+- always send logic packet - ([1edf31b](https://github.com/slainless/prodeskel-ws/commit/1edf31b473f2e942db2e70c75386b82ad2b667a0)) - Aiman Fauzy
+- added handling for error/close post-connected, also added new State: CLOSED - ([dc36835](https://github.com/slainless/prodeskel-ws/commit/dc368357ea3e7d3a1b1d256f72962fa9667f40ca)) - Aiman Fauzy
+
+---
 ## [0.1.11](https://github.com/slainless/prodeskel-ws/compare/v0.1.10..0.1.11) - 2024-07-03
 
 ### Documentation
