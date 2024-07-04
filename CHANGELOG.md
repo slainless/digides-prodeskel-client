@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.14](https://github.com/slainless/prodeskel-ws/compare/v0.1.13..0.1.14) - 2024-07-04
+
+### Build
+
+- added import map - ([0538b05](https://github.com/slainless/prodeskel-ws/commit/0538b0538e63c2f3aaf4da71cbce55a7a0fa98a1)) - Aiman Fauzy
+
+---
 ## [0.1.13](https://github.com/slainless/prodeskel-ws/compare/v0.1.12..0.1.13) - 2024-07-04
 
 ### Build
