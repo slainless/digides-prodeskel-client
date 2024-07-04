@@ -69,6 +69,14 @@ export abstract class ProdeskelWebSocket {
       }
     })
 
+    this.ws.on("error", () => {
+      this.setState(State.ERROR)
+    })
+
+    this.ws.on("close", () => {
+      this.setState(State.CLOSED)
+    })
+
     return this
   }
 
@@ -293,7 +301,8 @@ export enum State {
   CONNECTED,
   IDLE,
   SYNCING,
-  ERROR
+  ERROR,
+  CLOSED
 }
 
 export const EventNamePrefix: string = 'prodeskel'
