@@ -1,6 +1,18 @@
 # Changelog
 
 ---
+## [0.1.16](https://github.com/slainless/prodeskel-ws/compare/v0.1.15..0.1.16) - 2024-07-08
+
+### Bug Fixes
+
+- missing state guard on start onStop listener - ([dd705eb](https://github.com/slainless/prodeskel-ws/commit/dd705eb2dc1c6260250e48c951051efc1b734dba)) - Aiman Fauzy
+- added inherent sync status listener - ([bf8b221](https://github.com/slainless/prodeskel-ws/commit/bf8b221930ab0cd204592cbf6ea69883ac8df0b5)) - Aiman Fauzy
+
+### Build
+
+- added isolatedModules, stripInternal to tsconfig; tag some private symbols as @internal - ([bd9927e](https://github.com/slainless/prodeskel-ws/commit/bd9927e2add1c90cf05d2e7edf11dbb1ce52d320)) - Aiman Fauzy
+
+---
 ## [0.1.14](https://github.com/slainless/prodeskel-ws/compare/v0.1.13..0.1.14) - 2024-07-04
 
 ### Build
