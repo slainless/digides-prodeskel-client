@@ -230,7 +230,8 @@ export abstract class ProdeskelWebSocket {
       })
 
       const onStop = () => {
-        this.setState(State.IDLE)
+        if (this.__state == State.SYNCING)
+          this.setState(State.IDLE)
       }
       this.once('sync_status:finished', onStop)
       this.once('sync_status:stopped', onStop)
