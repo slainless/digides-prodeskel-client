@@ -77,6 +77,32 @@ export abstract class ProdeskelWebSocket {
       this.setState(State.CLOSED)
     })
 
+    // ==========================================
+
+    // these event handlers are safe to be listened 
+    // to pre-logged in since it can only be caught 
+    // when user logged in...
+
+    this.on("sync_status", (packet) => {
+      switch (packet.response) {
+        case 'sync_status:finished':
+        case 'sync_status:stopped':
+        case 'sync_status:no_running_task':
+          this.setState(State.IDLE)
+          break
+        case 'sync_status:already_running':
+        case 'sync_status:started':
+          this.setState(State.SYNCING)
+          break
+        default:
+          return
+      }
+    })
+
+    this.on("sync_task", (packet) => {
+      this.setState(State.SYNCING)
+    })
+
     return this
   }
 
@@ -225,16 +251,16 @@ export abstract class ProdeskelWebSocket {
         }
 
         that.off('sync_status', listener)
-        that.setState(State.SYNCING)
+        // that.setState(State.SYNCING)
         res(true)
       })
 
-      const onStop = () => {
-        if (this.__state == State.SYNCING)
-          this.setState(State.IDLE)
-      }
-      this.once('sync_status:finished', onStop)
-      this.once('sync_status:stopped', onStop)
+      // const onStop = () => {
+      //   if (this.__state == State.SYNCING)
+      //     this.setState(State.IDLE)
+      // }
+      // this.once('sync_status:finished', onStop)
+      // this.once('sync_status:stopped', onStop)
 
       this.ws.send(JSON.stringify({
         command: 'start'
@@ -264,7 +290,7 @@ export abstract class ProdeskelWebSocket {
         }
 
         that.off('sync_status', listener)
-        that.setState(State.IDLE)
+        // that.setState(State.IDLE)
         res(true)
       })
 
