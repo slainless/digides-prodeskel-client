@@ -302,6 +302,9 @@ export abstract class ProdeskelWebSocket {
     })
   }
 
+  /**
+   * @internal
+   */
   private static getListener(args: any[]): { code: EventName, listener: (...args: any[]) => void } {
     if (typeof args[0] == 'string') {
       const code = assert<UnprefixedEventName>(args[0])

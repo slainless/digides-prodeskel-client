@@ -7,6 +7,9 @@ export class ResponseEvent extends Event {
 }
 
 export class EventEmitterWebSocket extends WebSocket implements WebSocketLike {
+  /**
+   * @internal
+   */
   private listenerMap: Record<string, WeakMap<Function, any>> = {}
 
   constructor(url: string, procotols?: string | string[]) {
@@ -18,19 +21,19 @@ export class EventEmitterWebSocket extends WebSocket implements WebSocketLike {
   on(event: 'error', listener: () => void): void
   on(event: 'open', listener: () => void): void
   on(event: string, listener: (data?: any) => void): void {
-    if(this.listenerMap[event]?.has(listener)) return
-    if(this.listenerMap[event] == null)
+    if (this.listenerMap[event]?.has(listener)) return
+    if (this.listenerMap[event] == null)
       this.listenerMap[event] = new WeakMap<Function, Function>()
-    
+
     const listenerBridge = EventEmitterWebSocket.createListenerBridge(listener)
     this.listenerMap[event].set(listener, listenerBridge)
     super.addEventListener(event, listenerBridge)
   }
 
   off(event: string, listener: (data?: any) => void): void {
-    if(this.listenerMap[event] == null) return
+    if (this.listenerMap[event] == null) return
     const listenerBridge = this.listenerMap[event].get(listener)
-    if(listenerBridge == null) return
+    if (listenerBridge == null) return
 
     super.removeEventListener(event, listenerBridge)
     this.listenerMap[event].delete(listener)
@@ -53,9 +56,12 @@ export class EventEmitterWebSocket extends WebSocket implements WebSocketLike {
     super.dispatchEvent(new ResponseEvent(event, data))
   }
 
+  /**
+   * @internal
+   */
   private static createListenerBridge(listener: Function) {
     return (data: Event | MessageEvent) => {
-      if(data instanceof MessageEvent || data instanceof ResponseEvent) 
+      if (data instanceof MessageEvent || data instanceof ResponseEvent)
         listener(data.data)
       else listener()
     }
