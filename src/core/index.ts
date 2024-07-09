@@ -99,16 +99,14 @@ export abstract class ProdeskelWebSocket {
       }
     })
 
-    this.on("sync_task", (packet) => {
-      this.setState(State.SYNCING)
-    })
-
     this.on("auth:ok", (packet) => {
       if (packet.sync_status != 'already_running') return
+      this.setState(State.SYNCING)
       this.ws.emit(getEventName("sync_progress"), packet satisfies SyncProgress)
     })
 
     this.on("sync_task", (packet) => {
+      this.setState(State.SYNCING)
       this.ws.emit(getEventName("sync_progress"), packet satisfies SyncProgress)
     })
 
