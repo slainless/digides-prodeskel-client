@@ -3,7 +3,7 @@
   "type": "module",
   "author": "Aiman Fauzy",
   "description": "Basic WebSocket client implementations for DIGIDES Prodeskel Service.",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "repository": {
     "type": "git",
     "url": "https://github.com/slainless/prodeskel-ws.git"

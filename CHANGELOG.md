@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.17](https://github.com/slainless/prodeskel-ws/compare/v0.1.16..0.1.17) - 2024-07-09
+
+### Features
+
+- added sync_progress event and typed SyncTaskProgress - ([efc9d96](https://github.com/slainless/prodeskel-ws/commit/efc9d96988b77d63b4b5261abbebe9f41028b604)) - Aiman Fauzy
+
+---
 ## [0.1.16](https://github.com/slainless/prodeskel-ws/compare/v0.1.15..0.1.16) - 2024-07-08
 
 ### Bug Fixes
