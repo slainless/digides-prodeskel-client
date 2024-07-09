@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.18](https://github.com/slainless/prodeskel-ws/compare/v0.1.17..0.1.18) - 2024-07-09
+
+### Bug Fixes
+
+- set state to syncing on auth:ok and sync_task - ([a28c291](https://github.com/slainless/prodeskel-ws/commit/a28c2917b91e89347eeab57fe053d346cec1ec4e)) - Aiman Fauzy
+
+---
 ## [0.1.17](https://github.com/slainless/prodeskel-ws/compare/v0.1.16..0.1.17) - 2024-07-09
 
 ### Features
