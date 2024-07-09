@@ -44,7 +44,17 @@ export namespace SyncTaskProgress {
     current_prodeskel_kk_id: string
     current_prodeskel_ak_id: string
   }
+
+  export type Named = Base & WithName
+  export type Full = Named & WithProdeskel
+  export type BaseWithKK = Base & WithProdeskelKK
 }
+
+export type SyncTaskProgress =
+  | SyncTaskProgress.Base
+  | SyncTaskProgress.BaseWithKK
+  | SyncTaskProgress.Named
+  | SyncTaskProgress.Full
 
 export namespace ResponsePacket {
   export type Generic<Code extends ResponseCode> = {
@@ -80,26 +90,21 @@ export namespace ResponsePacket {
 
   // sync task
 
-  type BaseProgress = SyncTaskProgress.Base
-  type NamedProgress = BaseProgress & SyncTaskProgress.WithName
-  type FullProgress = NamedProgress & SyncTaskProgress.WithProdeskel
-  type BaseProgressWithKK = BaseProgress & SyncTaskProgress.WithProdeskelKK
-
-  export interface SyncTaskSyncStarted extends Generic<'sync_task:sync:started'>, NamedProgress { }
-  export interface SyncTaskSyncAssignedOp extends Generic<'sync_task:sync:assigned_op'>, NamedProgress {
+  export interface SyncTaskSyncStarted extends Generic<'sync_task:sync:started'>, SyncTaskProgress.Named { }
+  export interface SyncTaskSyncAssignedOp extends Generic<'sync_task:sync:assigned_op'>, SyncTaskProgress.Named {
     assigned_op: 'update' | 'insert' | 'upsert' | 'skipped'
   }
-  export interface SyncTaskSyncConflict extends Generic<'sync_task:sync:conflict'>, FullProgress { }
-  export interface SyncTaskSyncDone extends Generic<'sync_task:sync:done'>, FullProgress { }
-  export interface SyncTaskSyncError extends Generic<'sync_task:sync:error'>, BaseProgress {
+  export interface SyncTaskSyncConflict extends Generic<'sync_task:sync:conflict'>, SyncTaskProgress.Full { }
+  export interface SyncTaskSyncDone extends Generic<'sync_task:sync:done'>, SyncTaskProgress.Full { }
+  export interface SyncTaskSyncError extends Generic<'sync_task:sync:error'>, SyncTaskProgress.Base {
     error: string
     [key: string]: any
   }
 
   type No<T extends { response: string }> = Omit<T, 'response'>
-  export interface SyncTaskDeleteStarted extends Generic<'sync_task:delete:started'>, BaseProgressWithKK { }
-  export interface SyncTaskDeleteDone extends Generic<'sync_task:delete:done'>, BaseProgressWithKK { }
-  export interface SyncTaskDeleteError extends No<SyncTaskSyncError>, Generic<'sync_task:delete:error'> { }
+  export interface SyncTaskDeleteStarted extends Generic<'sync_task:delete:started'>, SyncTaskProgress.BaseWithKK { }
+  export interface SyncTaskDeleteDone extends Generic<'sync_task:delete:done'>, SyncTaskProgress.BaseWithKK { }
+  export interface SyncTaskDeleteError extends No<SyncTaskSyncError>, Generic<'sync_task:delete:error'>, SyncTaskProgress.BaseWithKK { }
 }
 
 export type ResponsePacket =

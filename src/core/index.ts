@@ -1,5 +1,5 @@
 import { assert, is } from 'typia'
-import type { ResponseCode, ResponsePacket, CommandPacket } from '../schema'
+import type { ResponseCode, ResponsePacket, CommandPacket, SyncTaskProgress } from '../schema'
 import type { WebSocketLike, WebsocketData } from './websocket'
 
 export abstract class ProdeskelWebSocket {
@@ -101,6 +101,15 @@ export abstract class ProdeskelWebSocket {
 
     this.on("sync_task", (packet) => {
       this.setState(State.SYNCING)
+    })
+
+    this.on("auth:ok", (packet) => {
+      if (packet.sync_status != 'already_running') return
+      this.ws.emit(getEventName("sync_progress"), packet satisfies SyncProgress)
+    })
+
+    this.on("sync_task", (packet) => {
+      this.ws.emit(getEventName("sync_progress"), packet satisfies SyncProgress)
     })
 
     return this
@@ -336,16 +345,19 @@ export enum State {
 }
 
 export const EventNamePrefix: string = 'prodeskel'
-type UnprefixedEventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message' | 'state_change'
+type UnprefixedEventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message' | 'state_change' | 'sync_progress'
 export type EventName = `${typeof EventNamePrefix}:${UnprefixedEventName}`
 
 type Explode<T extends string, Acc extends string = ''> =
   T extends `${infer L}:${infer R}` ? `${Acc}${L}` | Explode<R, `${Acc}${L}:`> : never
+type SyncProgress = Extract<ResponsePacket, SyncTaskProgress>
 type PacketStartsWith<C extends UnprefixedEventName> =
   C extends 'message' ?
   ResponsePacket :
   C extends 'state_change' ?
   State :
+  C extends 'sync_progress' ?
+  SyncProgress :
   Extract<ResponsePacket, { response: Extract<ResponseCode, C | `${C}:${string}`> }>
 
 export const getEventName = <T extends UnprefixedEventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
