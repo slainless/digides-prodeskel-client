@@ -211,7 +211,7 @@ export abstract class ProdeskelWebSocket {
    * Event handler helper to create listener for prodeskel packets.
    * Internally, will just attach listener to the `prodeskel:${string}` event.
    */
-  on<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): this
+  on<Code extends EventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): this
   on(listener: (packet: ResponsePacket) => void): this
   on(...args: any[]): this {
     const { code, listener } = ProdeskelWebSocket.getListener(args)
@@ -222,7 +222,7 @@ export abstract class ProdeskelWebSocket {
   /**
    * Remove response handler. Internally, just an alias to `this.off(getEventName(code), listener)`.
    */
-  off<Code extends UnprefixedEventName>(code: Code, listener: (...args: any[]) => void): this {
+  off<Code extends EventName>(code: Code, listener: (...args: any[]) => void): this {
     this.ws.off(getEventName(code), listener)
     return this
   }
@@ -231,7 +231,7 @@ export abstract class ProdeskelWebSocket {
    * Event handler helper to create listener for prodeskel packets.
    * Internally, will just attach listener to the `prodeskel:${string}` event.
    */
-  once<Code extends UnprefixedEventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): this
+  once<Code extends EventName>(code: Code, listener: (packet: PacketStartsWith<Code>) => void): this
   once(listener: (packet: ResponsePacket) => void): this
   once(...args: any[]): this {
     const { code, listener } = ProdeskelWebSocket.getListener(args)
@@ -312,9 +312,9 @@ export abstract class ProdeskelWebSocket {
   /**
    * @internal
    */
-  private static getListener(args: any[]): { code: EventName, listener: (...args: any[]) => void } {
+  private static getListener(args: any[]): { code: PrefixedEventName, listener: (...args: any[]) => void } {
     if (typeof args[0] == 'string') {
-      const code = assert<UnprefixedEventName>(args[0])
+      const code = assert<EventName>(args[0])
       const listener = args[1]
       if (listener == null) throw new TypeError("Missing listener argument")
       if (typeof listener != 'function') throw new TypeError("Invalid listener argument")
@@ -346,14 +346,14 @@ export enum State {
   CLOSED
 }
 
-export const EventNamePrefix: string = 'prodeskel'
-type UnprefixedEventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message' | 'state_change' | 'sync_progress'
-export type EventName = `${typeof EventNamePrefix}:${UnprefixedEventName}`
+export const EventNamePrefix = 'prodeskel'
+export type EventName = Explode<ResponseCode> | ResponseCode | 'ready' | 'message' | 'state_change' | 'sync_progress'
+export type PrefixedEventName = `${typeof EventNamePrefix}:${EventName}`
 
 type Explode<T extends string, Acc extends string = ''> =
   T extends `${infer L}:${infer R}` ? `${Acc}${L}` | Explode<R, `${Acc}${L}:`> : never
 type SyncProgress = Extract<ResponsePacket, SyncTaskProgress>
-type PacketStartsWith<C extends UnprefixedEventName> =
+type PacketStartsWith<C extends EventName> =
   C extends 'message' ?
   ResponsePacket :
   C extends 'state_change' ?
@@ -362,7 +362,7 @@ type PacketStartsWith<C extends UnprefixedEventName> =
   SyncProgress :
   Extract<ResponsePacket, { response: Extract<ResponseCode, C | `${C}:${string}`> }>
 
-export const getEventName = <T extends UnprefixedEventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
+export const getEventName = <T extends EventName>(name: T): `${typeof EventNamePrefix}:${T}` => `${EventNamePrefix}:${name}`
 
 export const ErrorInvalidServer: Error = new TypeError("Server is not a valid DIGIDES Prodeskel server")
 export const ErrorConnectionClosed: Error = new TypeError("Connection is closed")
