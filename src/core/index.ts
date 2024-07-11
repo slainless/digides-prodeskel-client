@@ -331,6 +331,10 @@ export abstract class ProdeskelWebSocket {
   get connection(): typeof this.ws {
     return this.ws
   }
+
+  close(): void {
+    this.ws.close()
+  }
 }
 
 export enum State {
