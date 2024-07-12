@@ -23,6 +23,15 @@ some added methods to allow easier integration:
 - **`stop()`**: Stop synchronization process.
 - Many events which can be tapped/listened into, such as `state_change`, `auth`, `sync_task`, etc. It's also possible to listen to derivative/specific event such `sync_task:sync` or `sync_task:sync:started`. [Full event list](./src/schema/response.ts).
 
+## Note
+
+Since the connections are synchronized with each other based on their schema, `start` and `stop` command are shared across
+all the other connections with same schema. To put it simply, all connections with same schema are working on the same space and task.
+One user can stop a running task and the other user will receive broadcast that the task has been stopped. Progress of the
+task are also synchronized so each user with same schema should receive same progress broadcast packets.
+
+The only commands that are locally scoped to connection are `identify_yourself` and (obviously) `auth`.
+
 ## Usage
 
 For package installation, please refer to [JSR native imports](https://jsr.io/docs/native-imports) or [JSR npm compat](https://jsr.io/docs/npm-compatibility).
