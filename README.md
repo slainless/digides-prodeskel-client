@@ -1,5 +1,7 @@
 # prodeskel-ws
 
+[![JSR Scope](https://jsr.io/badges/@slainless)](https://jsr.io/@slainless/prodeskel-ws) [![JSR Scope](https://jsr.io/badges/@slainless/prodeskel-ws)](https://jsr.io/@slainless/prodeskel-ws)
+
 Basic WebSocket client implementations for DIGIDES Prodeskel Service.
 
 This package should provide browser-compliant client (extending browser's WebSocket)
@@ -14,29 +16,37 @@ IIFE package should be provided soon.
 This package is basically just an extension to base `WebSocket` class, with
 some added methods to allow easier integration:
 
-- `ready()`: Throws error in case of invalid prodeskel server, closed, or error on initialization.
-  Internally, server will do an initialization and custom handshake. This method can be used to track whether
-  the server has completed this process. Manual event handling can also be used to subscribe to this internal
-  process, using `ws.on(getEventName('ready'), () => {})`.
-- `login()`: Provides easy in-connection authentication.
-  This method will call `ready()` internally so it's safe to be called directly without invoking `ready()`.
-- `on()`, `once()`, `off()`: Provides event listener handling shortcut for the underneath websocket.
-- `start()`: Start synchronization process. Will return true without network call if already synchronizing
-  or when server responds with `sync_status:already_running|started`.
-- `stop()`: Stop synchronization process. Will return false without network call if idle
-  or when server responds with `sync_status:stopped|finished|no_running_task`.
+- **`ready()`**: Throws error in case of invalid prodeskel server, closed, or error on initialization.
+- **`login()`**: Provides easy in-connection authentication.
+- **`on()`, `once()`, `off()`**: Provides event listener handling shortcut for the underneath websocket.
+- **`start()`**: Start synchronization process.
+- **`stop()`**: Stop synchronization process.
+- Many events which can be tapped/listened into, such as `state_change`, `auth`, `sync_task`, etc. It's also possible to listen to derivative/specific event such `sync_task:sync` or `sync_task:sync:started`. [Full event list](./src/schema/response.ts).
 
 ## Usage
 
-For now, this package provides implementation for browser usage,
-which can be imported from `prodeskel-ws/browser`.
+For package installation, please refer to [JSR native imports](https://jsr.io/docs/native-imports) or [JSR npm compat](https://jsr.io/docs/npm-compatibility).
 
-Usage examples:
-
-### Client generation
+If you prefer to use it directly in browser (or Deno without using native imports), you can also import the project from `esm.sh`:
 
 ```ts
-import { ProdeskelWebSocket } from 'prodeskel-ws'
+import {
+  ProdeskelWebSocket,
+  State,
+} from 'https://esm.sh/jsr/@slainless/prodeskel-ws/browser'
+```
+
+For now, this package provides implementation for browser usage,
+which can be imported from `@slainless/prodeskel-ws/browser`.
+
+### Examples
+
+A fully working demo, built on top of Carbon and Alpine is available at [slainless/digides-prodeskel-ws-client-demo](https://github.com/slainless/digides-prodeskel-ws-client-demo).
+
+#### Client generation
+
+```ts
+import { ProdeskelWebSocket } from '@slainless/prodeskel-ws'
 
 async function createClient() {
   const ws = new ProdeskelWebSocket('wss://service.id/ws')
@@ -45,10 +55,10 @@ async function createClient() {
 }
 ```
 
-### Full usage
+#### Full usage
 
 ```ts
-import { ProdeskelWebSocket } from 'prodeskel-ws'
+import { ProdeskelWebSocket } from '@slainless/prodeskel-ws'
 
 ...
 
@@ -92,7 +102,7 @@ Also, correct event code can be acquired from `getEventName`, exported by `./cor
 module.
 
 ```ts
-import { getEventName, ProdeskelWebSocket } from 'prodeskel-ws'
+import { getEventName, ProdeskelWebSocket } from '@slainless/prodeskel-ws'
 
 async function createClient(credential) {
   const ws = new ProdeskelWebSocket('wss://service.id/ws')
