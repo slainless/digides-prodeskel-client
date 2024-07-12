@@ -90,6 +90,9 @@ export abstract class ProdeskelWebSocket {
         case 'sync_status:no_running_task':
           this.setState(State.IDLE)
           break
+        case 'sync_status:queued':
+          this.setState(State.QUEUING)
+          break
         case 'sync_status:already_running':
         case 'sync_status:started':
           this.setState(State.SYNCING)
@@ -246,10 +249,11 @@ export abstract class ProdeskelWebSocket {
 
     const that = this
     return new Promise<boolean>((res, rej) => {
-      if (this.__state === State.SYNCING) return res(true)
+      if (this.__state === State.SYNCING || this.__state === State.QUEUING) return res(true)
 
       this.on('sync_status', function listener(packet) {
         switch (packet.response) {
+          case 'sync_status:queued':
           case 'sync_status:already_running':
           case 'sync_status:started':
             break
@@ -341,6 +345,7 @@ export enum State {
   INITIAL,
   CONNECTED,
   IDLE,
+  QUEUING,
   SYNCING,
   ERROR,
   CLOSED

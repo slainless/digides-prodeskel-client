@@ -7,6 +7,7 @@ export type ResponseCode =
   | 'auth:ok'
   // sync response
   | 'sync_status:started'
+  | 'sync_status:queued'
   | 'sync_status:already_running'
   | 'sync_status:stopped'
   | 'sync_status:finished'

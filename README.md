@@ -32,6 +32,8 @@ task are also synchronized so each user with same schema should receive same pro
 
 The only commands that are locally scoped to connection are `identify_yourself` and (obviously) `auth`.
 
+Also, it's possible that the task is not immediately ran and will be put in queue, based on server task pool.
+
 ## Usage
 
 For package installation, please refer to [JSR native imports](https://jsr.io/docs/native-imports) or [JSR npm compat](https://jsr.io/docs/npm-compatibility).
