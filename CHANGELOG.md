@@ -1,6 +1,17 @@
 # Changelog
 
 ---
+## [0.1.19](https://github.com/slainless/prodeskel-ws/compare/v0.1.18..0.1.19) - 2024-07-12
+
+### Features
+
+- added close connection shortcut - ([e74918c](https://github.com/slainless/prodeskel-ws/commit/e74918c5365625eb64b3da49d32f5a0ae58abfd3)) - Aiman Fauzy
+
+### Refactoring
+
+-  [**breaking**]renamed UnprefixedEventName to EventName; EventName to PrefixedEventName - ([f7083e5](https://github.com/slainless/prodeskel-ws/commit/f7083e50091de8a1820c565c095f0e634b204a73)) - Aiman Fauzy
+
+---
 ## [0.1.18](https://github.com/slainless/prodeskel-ws/compare/v0.1.17..0.1.18) - 2024-07-09
 
 ### Bug Fixes
