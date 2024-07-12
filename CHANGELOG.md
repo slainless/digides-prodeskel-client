@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.20](https://github.com/slainless/prodeskel-ws/compare/v0.1.19..0.1.20) - 2024-07-12
+
+### Bug Fixes
+
+- optional current_id in SyncTaskProgress.Base - ([6964b13](https://github.com/slainless/prodeskel-ws/commit/6964b13171f2de79dc4fc5e42ff2d6181a9b269a)) - Aiman Fauzy
+
+---
 ## [0.1.19](https://github.com/slainless/prodeskel-ws/compare/v0.1.18..0.1.19) - 2024-07-12
 
 ### Features
