@@ -1,6 +1,18 @@
 # Changelog
 
 ---
+## [0.1.21](https://github.com/slainless/prodeskel-ws/compare/v0.1.20..0.1.21) - 2024-07-12
+
+### Documentation
+
+- update README - ([14aaf3c](https://github.com/slainless/prodeskel-ws/commit/14aaf3c023893ad60167120f3dcca391a4566837)) - Aiman Fauzy
+- added note to README - ([2aeb32a](https://github.com/slainless/prodeskel-ws/commit/2aeb32a8312d9696d52a553d6b1f6aa51ca39af1)) - Aiman Fauzy
+
+### Features
+
+- added queue state - ([c1e5bfc](https://github.com/slainless/prodeskel-ws/commit/c1e5bfc1fd02d06dbf34f43f35e210d401d5b9fd)) - Aiman Fauzy
+
+---
 ## [0.1.20](https://github.com/slainless/prodeskel-ws/compare/v0.1.19..0.1.20) - 2024-07-12
 
 ### Bug Fixes
