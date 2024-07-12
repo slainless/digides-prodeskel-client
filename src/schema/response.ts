@@ -27,7 +27,7 @@ export namespace SyncTaskProgress {
     failed: number
     skipped: number
     total: number
-    current_id: string
+    current_id?: string | null
   }
 
   export interface WithName {
