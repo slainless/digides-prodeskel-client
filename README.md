@@ -7,9 +7,7 @@ Basic WebSocket client implementations for DIGIDES Prodeskel Service.
 This package should provide browser-compliant client (extending browser's WebSocket)
 and to-be-added later, advanced client for server-side usage.
 
-This package is ESM-only.
-
-IIFE package should be provided soon.
+This package is ESM-only. IIFE version for browser is also available, check out usage below.
 
 ## Features
 
@@ -47,8 +45,14 @@ import {
 } from 'https://esm.sh/jsr/@slainless/prodeskel-ws/browser'
 ```
 
-For now, this package provides implementation for browser usage,
+For now, this package only provides core implementation and implementation for browser usage,
 which can be imported from `@slainless/prodeskel-ws/browser`.
+
+There is also IIFE version available, which should be loadable directly with:
+
+```html
+<script src="https://esm.sh/jsr/@slainless/prodeskel-ws/browser.min"></script>
+```
 
 ### Examples
 

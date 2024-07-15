@@ -6,7 +6,8 @@
   "exports": {
     "./browser": "./dist/browser/index.js",
     "./schema": "./dist/schema/index.js",
-    "./core": "./dist/core/index.js"
+    "./core": "./dist/core/index.js",
+    "./browser.min": "./dist/browser.min.js"
   },
   "publish": {
     "include": [
