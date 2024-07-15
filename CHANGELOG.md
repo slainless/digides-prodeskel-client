@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.22](https://github.com/slainless/prodeskel-ws/compare/v0.1.21..0.1.22) - 2024-07-15
+
+### Features
+
+- added iife version for browser - ([c8b0273](https://github.com/slainless/prodeskel-ws/commit/c8b0273a292d4255427e05211fd7dfa5a23fdc18)) - Aiman Fauzy
+
+---
 ## [0.1.21](https://github.com/slainless/prodeskel-ws/compare/v0.1.20..0.1.21) - 2024-07-12
 
 ### Documentation
