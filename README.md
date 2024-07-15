@@ -51,8 +51,10 @@ which can be imported from `@slainless/prodeskel-ws/browser`.
 There is also IIFE version available, which should be loadable directly with:
 
 ```html
-<script src="https://esm.sh/jsr/@slainless/prodeskel-ws/browser.min"></script>
+<script src="https://raw.esm.sh/jsr/@slainless/prodeskel-ws/dist/browser.min.js"></script>
 ```
+
+After loading, `prodeskelws` global object should be available to use, which should expose `ProdeskelWebSocket`, `State`, and `getEventName`.
 
 ### Examples
 
