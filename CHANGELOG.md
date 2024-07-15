@@ -1,6 +1,13 @@
 # Changelog
 
 ---
+## [0.1.23](https://github.com/slainless/prodeskel-ws/compare/v0.1.22..0.1.23) - 2024-07-15
+
+### Documentation
+
+- fix wrong iife usage - ([301b3b3](https://github.com/slainless/prodeskel-ws/commit/301b3b3b276f3bf3a396e5ebca427b962b939752)) - Aiman Fauzy
+
+---
 ## [0.1.22](https://github.com/slainless/prodeskel-ws/compare/v0.1.21..0.1.22) - 2024-07-15
 
 ### Features
